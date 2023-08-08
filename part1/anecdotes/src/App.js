@@ -58,12 +58,26 @@ const App = () => {
     setAnecdotes(updatedAnecdotes);
   };
 
+  const getMostVotedAnecdote = () => {
+    const mostPopularAnecdote = anecdotes.reduce((acc, curr) => {
+      if (curr.votes > acc.votes) {
+        return curr;
+      }
+      return acc;
+    }, anecdotes[0]);
+    return mostPopularAnecdote;
+  };
+
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected].quote}</p>
       <p>has {anecdotes[selected].votes} votes</p>
       <button onClick={handleVote}>vote</button>
       <button onClick={handleNextAnecdote}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <p>{getMostVotedAnecdote().quote}</p>
+      <p>has {getMostVotedAnecdote().votes} votes</p>
     </div>
   );
 };
