@@ -8,8 +8,16 @@ const App = () => {
 
   const handleAddContact = (event) => {
     event.preventDefault();
-    setPersons([...persons, { name: newName }]);
-    setNewName("");
+    if (persons.some((person) => person.name === newName)) {
+      alert(`${newName} is already added to phonebook`);
+      return;
+    } else if (newName === "") {
+      alert("Please enter a name");
+      return;
+    } else {
+      setPersons([...persons, { name: newName }]);
+      setNewName("");
+    }
   };
 
   return (
