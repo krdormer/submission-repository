@@ -1,4 +1,9 @@
 import { useState } from "react";
+import Header from "./components/Header";
+import Filter from "./components/Filter";
+import SubHeader from "./components/Subheader";
+import Form from "./components/Form";
+import ContactList from "./components/ContactList";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -10,7 +15,6 @@ const App = () => {
   const [newContact, setNewContact] = useState({ name: "", number: "" });
 
   const handleFilter = (event) => {
-    console.log(event.target.value);
     const filteredPersons = persons.filter((person) =>
       person.name.toLowerCase().includes(event.target.value.toLowerCase())
     );
@@ -43,45 +47,16 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
-      <div>
-        filter shown with{" "}
-        <input
-          name="filter"
-          onChange={handleFilter}
-          value={newContact.filter}
-        />
-      </div>
-      <h2>add a new</h2>
-      <form onSubmit={handleAddContact}>
-        <div>
-          name:{" "}
-          <input
-            name="name"
-            onChange={handleContactChange}
-            value={newContact.name}
-          />
-        </div>
-        <div>
-          number:{" "}
-          <input
-            name="number"
-            onChange={handleContactChange}
-            value={newContact.number}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {persons.map((person) => (
-          <li key={person.name}>
-            {person.name} {person.number}
-          </li>
-        ))}
-      </ul>
+      <Header title="Phonebook" />
+      <Filter value={newContact.filter} onChange={handleFilter} />
+      <SubHeader subheader="Add a New Contact" />
+      <Form
+        onSubmit={handleAddContact}
+        onChange={handleContactChange}
+        newContact={newContact}
+      />
+      <SubHeader subheader="Numbers" />
+      <ContactList contacts={persons} />
     </div>
   );
 };
