@@ -5,6 +5,10 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
+  const [total, setTotal] = useState(0);
+
+  const averageRating = (good - bad) / total;
+  const positiveRating = (good / total) * 100;
 
   const handleFeedback = (e) => {
     const buttonText = e.target.textContent;
@@ -15,6 +19,7 @@ const App = () => {
     } else {
       setBad(bad + 1);
     }
+    setTotal(total + 1);
   };
 
   return (
@@ -30,6 +35,9 @@ const App = () => {
         <p>Good: {good}</p>
         <p>Neutral: {neutral}</p>
         <p>Bad: {bad}</p>
+        <p>All: {total}</p>
+        <p>Average: {averageRating}</p>
+        <p>Positive: {positiveRating}%</p>
       </div>
     </div>
   );
