@@ -1,17 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Filter from "./components/Filter";
 import SubHeader from "./components/Subheader";
 import Form from "./components/Form";
 import ContactList from "./components/ContactList";
+import axios from "axios";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
+  const [persons, setPersons] = useState([]);
+  console.log("🚀 ~ file: App.js:11 ~ App ~ persons:", persons);
   const [newContact, setNewContact] = useState({ name: "", number: "" });
 
   const handleFilter = (event) => {
@@ -45,6 +42,12 @@ const App = () => {
     }
   };
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/persons")
+      .then((res) => setPersons(res.data));
+  }, []);
+
   return (
     <div>
       <Header title="Phonebook" />
@@ -56,7 +59,7 @@ const App = () => {
         newContact={newContact}
       />
       <SubHeader subheader="Numbers" />
-      <ContactList contacts={persons} />
+      {persons && <ContactList contacts={persons} />}
     </div>
   );
 };
