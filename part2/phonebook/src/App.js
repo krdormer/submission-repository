@@ -4,10 +4,11 @@ import Filter from "./components/Filter";
 import SubHeader from "./components/Subheader";
 import Form from "./components/Form";
 import ContactList from "./components/ContactList";
-import { createPerson, deletePerson, getAll } from "./server";
+import { createPerson, deletePerson, getAll, updatePerson } from "./server";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
+  console.log("🚀 ~ file: App.js:11 ~ App ~ persons:", persons)
   const [newContact, setNewContact] = useState({ name: "", number: "" });
 
   const handleFilter = (event) => {
@@ -27,8 +28,12 @@ const App = () => {
   const handleAddContact = (event) => {
     event.preventDefault();
     if (persons.some((person) => person.name === newContact.name)) {
-      alert(`${newContact.name} is already added to phonebook`);
-      return;
+      const confirm = window.confirm(`${newContact.name} is already added to phonebook, replace the old number with a new one?`);
+      const personToUpdate = persons.find((person) => person.name === newContact.name);
+      confirm ? updatePerson(personToUpdate.id, newContact).then((res) => {
+        const updatedPersons = persons.filter((person) => person.id !== personToUpdate.id);
+        setPersons([...updatedPersons, res]);
+      }) : alert("Update cancelled");
     } else if (newContact.name === "") {
       alert("Please enter a name");
       return;
@@ -36,9 +41,8 @@ const App = () => {
       alert("Please enter a number");
       return;
     } else {
-      setPersons([...persons, newContact]);
       setNewContact({ name: "", number: "" });
-      createPerson(newContact);
+      createPerson(newContact).then(res => setPersons([...persons, res]))
     }
   };
 
