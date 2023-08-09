@@ -4,12 +4,20 @@ import Filter from "./components/Filter";
 import SubHeader from "./components/Subheader";
 import Form from "./components/Form";
 import ContactList from "./components/ContactList";
+import Notification from "./components/Notification";
 import { createPerson, deletePerson, getAll, updatePerson } from "./server";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  console.log("🚀 ~ file: App.js:11 ~ App ~ persons:", persons)
   const [newContact, setNewContact] = useState({ name: "", number: "" });
+  const [message, setMessage] = useState({ message: "", type: "" });
+
+  const handleShowMessage = (message, type) => {
+    setMessage({ message, type });
+    setInterval(() => {
+      setMessage("");
+    }, 5000);
+  };
 
   const handleFilter = (event) => {
     const filteredPersons = persons.filter((person) =>
@@ -25,24 +33,39 @@ const App = () => {
     });
   };
 
+  const handleUpdateContact = () => {
+    const confirm = window.confirm(`${newContact.name} is already added to phonebook, replace the old number with a new one?`);
+    const personToUpdate = persons.find((person) => person.name === newContact.name);
+    if(confirm) {
+      return updatePerson(personToUpdate.id, newContact).then((res) => {
+        const updatedPersons = persons.filter((person) => person.id !== personToUpdate.id);
+        setPersons([...updatedPersons, res]);
+        handleShowMessage(`Updated ${res.name}`, "success");
+      }).catch(err => {
+        console.log(err);
+        return handleShowMessage(`Error updating ${personToUpdate.name}`, "error");
+      });
+    } else { 
+      return handleShowMessage("Update cancelled", "success");
+    }
+  };
+
   const handleAddContact = (event) => {
     event.preventDefault();
     if (persons.some((person) => person.name === newContact.name)) {
-      const confirm = window.confirm(`${newContact.name} is already added to phonebook, replace the old number with a new one?`);
-      const personToUpdate = persons.find((person) => person.name === newContact.name);
-      confirm ? updatePerson(personToUpdate.id, newContact).then((res) => {
-        const updatedPersons = persons.filter((person) => person.id !== personToUpdate.id);
-        setPersons([...updatedPersons, res]);
-      }) : alert("Update cancelled");
+      handleUpdateContact();
+      return;
     } else if (newContact.name === "") {
-      alert("Please enter a name");
+      handleShowMessage("Please enter a name", "error");
       return;
     } else if (newContact.number === "") {
-      alert("Please enter a number");
+      handleShowMessage("Please enter a number", "error");
       return;
     } else {
+      // Add new contact
       setNewContact({ name: "", number: "" });
-      createPerson(newContact).then(res => setPersons([...persons, res]))
+      createPerson(newContact).then(res => setPersons([...persons, res]));
+      handleShowMessage(`Added ${newContact.name}`, "success");
     }
   };
 
@@ -56,14 +79,16 @@ const App = () => {
     deletePerson(id).then(() => {
       const updatedPersons = persons.filter((person) => person.id !== id);
       setPersons(updatedPersons);
+      handleShowMessage(`Deleted person ${id}`, "success");
     })
     :
-    alert("Delete cancelled");
+    handleShowMessage("Delete cancelled", "success");
   }
 
   return (
     <div>
       <Header title="Phonebook" />
+      {message.message && <Notification message={message.message} type={message.type} />}
       <Filter value={newContact.filter} onChange={handleFilter} />
       <SubHeader subheader="Add a New Contact" />
       <Form
