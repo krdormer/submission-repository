@@ -4,11 +4,10 @@ import Filter from "./components/Filter";
 import SubHeader from "./components/Subheader";
 import Form from "./components/Form";
 import ContactList from "./components/ContactList";
-import axios from "axios";
+import { createPerson, getAll } from "./server";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  console.log("🚀 ~ file: App.js:11 ~ App ~ persons:", persons);
   const [newContact, setNewContact] = useState({ name: "", number: "" });
 
   const handleFilter = (event) => {
@@ -39,13 +38,12 @@ const App = () => {
     } else {
       setPersons([...persons, newContact]);
       setNewContact({ name: "", number: "" });
+      createPerson(newContact);
     }
   };
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((res) => setPersons(res.data));
+    getAll().then((data) => setPersons(data));
   }, []);
 
   return (

@@ -57,4 +57,16 @@
 	2. Transpiles JSX into JS 
 3. React application in the browser fetches the JSON formatted data from `json-server` 
 4. json-server gets data from `db.json`
-5. 
+## REST API
+1. Individual data objects (like notes in example application) are known as `resources`
+2. Every `resource` has a unique ID associated with it - the URL 
+	1. By convention, URL would follow structure like:
+		1. `GET /notes/{documentId}`
+			1. Returns a specific note with `documentId`
+		2. `GET /notes/` 
+			1. Would return a list of all notes 
+		3. `POST /notes`
+			1. `body: { "note": "this is the note value" }`
+				1. Must be sent in JSON format
+				2. Must contain `Content-Type: application/json`  header
+					1. `axios` sets this by default if data is JSON formatted
