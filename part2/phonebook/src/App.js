@@ -4,7 +4,7 @@ import Filter from "./components/Filter";
 import SubHeader from "./components/Subheader";
 import Form from "./components/Form";
 import ContactList from "./components/ContactList";
-import { createPerson, getAll } from "./server";
+import { createPerson, deletePerson, getAll } from "./server";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -46,6 +46,17 @@ const App = () => {
     getAll().then((data) => setPersons(data));
   }, []);
 
+  const handleDeleteContact = (id) => {
+    window.confirm(`Are you sure you want to delete person ${id}?`)
+    ?
+    deletePerson(id).then(() => {
+      const updatedPersons = persons.filter((person) => person.id !== id);
+      setPersons(updatedPersons);
+    })
+    :
+    alert("Delete cancelled");
+  }
+
   return (
     <div>
       <Header title="Phonebook" />
@@ -57,7 +68,7 @@ const App = () => {
         newContact={newContact}
       />
       <SubHeader subheader="Numbers" />
-      {persons && <ContactList contacts={persons} />}
+      {persons && <ContactList contacts={persons} onClick={handleDeleteContact} />}
     </div>
   );
 };
