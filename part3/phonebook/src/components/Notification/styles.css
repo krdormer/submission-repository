@@ -1,0 +1,25 @@
+.success {
+  border: 3px solid green;
+  margin: 0 0 12px 5px;
+  background: lightgray;
+}
+
+.successNotificationText {
+  padding-left: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: green;
+}
+
+.error {
+  border: 3px solid red;
+  margin: 0 0 12px 5px;
+  background: lightpink;
+}
+
+.errorNotificationText {
+  padding-left: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: red;
+}
