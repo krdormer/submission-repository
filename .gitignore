@@ -1,1 +1,3 @@
 .DS_STORE
+# Remove node_modules from each part and any subdirectories
+part*/*/node_modules
