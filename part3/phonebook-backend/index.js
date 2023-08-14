@@ -38,11 +38,15 @@ app.get('/info', (req, res) => {
   res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`)
 });
 
-app.get('/persons', (req, res) => {
+app.get('/', (req, res) => {
+  res.send('<h1>Hello World!</h1>')
+});
+
+app.get('/api/persons', (req, res) => {
   res.send(persons)
 });
 
-app.get('/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res) => {
   const data = persons.find(person => person.id === Number(req.params.id))
   if (data) {
     res.send(data)
@@ -59,7 +63,7 @@ const generateId = (list) => {
   return maxId + 1
 }
 
-app.post('/persons', (request, response) => {
+app.post('/api/persons', (request, response) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -86,7 +90,7 @@ app.post('/persons', (request, response) => {
 })
 
 // ///////////////////////////// DELETE /////////////////////////////
-app.delete('/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res) => {
   const id = Number(req.params.id)
   persons = persons.filter(person => person.id !== id)
 
